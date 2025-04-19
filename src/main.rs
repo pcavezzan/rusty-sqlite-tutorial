@@ -1,3 +1,5 @@
+use rusty_sqlite_tutorial::run;
+
 fn main() {
-    println!("Hello, world!");
+    run().expect("Failed to run");
 }
