@@ -28,6 +28,13 @@ impl Display for CommandError {
 
 impl Error for CommandError {}
 
+#[derive(Debug, PartialEq)]
+pub enum BufferError {
+    /// Impossible d'écrire plus dans le buffer
+    BufferFull(String),
+    /// Impossible de lire plus depuis le buffer
+    ReadTooMuch(String),
+}
 
 //------------------------
 // DeserializationError
@@ -36,6 +43,7 @@ impl Error for CommandError {}
 pub enum DeserializationError {
     UnableToDeserializeString(FromUtf8Error),
     UnableToDeserializeInteger,
+    Buffer(BufferError),
 }
 
 impl Display for DeserializationError {
@@ -50,7 +58,9 @@ impl Error for DeserializationError {}
 // SerializationError
 //----------------------
 #[derive(Debug, PartialEq)]
-pub enum SerializationError {}
+pub enum SerializationError {
+    Buffer(BufferError),
+}
 
 impl Display for SerializationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
