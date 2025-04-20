@@ -1,7 +1,6 @@
-use core::fmt::Display;
-use std::error::Error;
 use crate::commands::meta::MetaCommand;
 use crate::commands::sql::SqlCommand;
+use crate::errors::{CommandError, ExecutionError};
 
 mod sql;
 mod meta;
@@ -38,32 +37,6 @@ trait TryFromStr {
 pub trait Execute {
     fn execute(&self) -> Result<(), ExecutionError>;
 }
-
-#[derive(Debug, PartialEq)]
-pub enum ExecutionError {}
-
-impl Display for ExecutionError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl Error for ExecutionError {}
-
-#[derive(Debug, PartialEq)]
-pub enum CommandError {
-    NotEnoughArguments,
-    TooManyArguments,
-    ExpectingInteger,
-}
-
-impl Display for CommandError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl Error for CommandError {}
 
 pub fn parse(input: &str) -> Result<Command, CommandError> {
     let input = input.trim_start();
