@@ -1,4 +1,5 @@
 use crate::commands::{CommandError, Execute, ExecutionError, TryFromStr};
+use crate::database::Database;
 
 #[derive(Debug, PartialEq)]
 pub enum MetaCommand {
@@ -17,7 +18,7 @@ impl TryFromStr for MetaCommand {
 }
 
 impl Execute for MetaCommand {
-    fn execute(&self) -> Result<(), ExecutionError> {
+    fn execute(self, _: &mut Database) -> Result<(), ExecutionError> {
         match self {
             MetaCommand::Exit => {
                 std::process::exit(0);

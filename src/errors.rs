@@ -3,7 +3,10 @@ use std::fmt::Display;
 use std::string::FromUtf8Error;
 
 #[derive(Debug, PartialEq)]
-pub enum ExecutionError {}
+pub enum ExecutionError {
+    Insertion(InsertionError),
+    Select(SelectError),
+}
 
 impl Display for ExecutionError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
