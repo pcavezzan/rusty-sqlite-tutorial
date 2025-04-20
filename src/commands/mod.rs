@@ -1,5 +1,6 @@
 use crate::commands::meta::MetaCommand;
 use crate::commands::sql::SqlCommand;
+use crate::database::Database;
 use crate::errors::{CommandError, ExecutionError};
 
 mod sql;
@@ -14,10 +15,10 @@ pub enum Command<'a> {
 }
 
 impl Execute for Command<'_> {
-    fn execute(&self) -> Result<(), ExecutionError> {
+    fn execute(self, database: &mut Database) -> Result<(), ExecutionError> {
         match self {
-            Command::Sql(command) => command.execute(),
-            Command::Meta(command) => command.execute(),
+            Command::Sql(command) => command.execute(database),
+            Command::Meta(command) => command.execute(database),
             Command::Unknown { .. } => {
                 println!("Unknown command");
                 Ok(())
@@ -35,7 +36,7 @@ trait TryFromStr {
 }
 
 pub trait Execute {
-    fn execute(&self) -> Result<(), ExecutionError>;
+    fn execute(self, database: &mut Database) -> Result<(), ExecutionError>;
 }
 
 pub fn parse(input: &str) -> Result<Command, CommandError> {

@@ -1,3 +1,3 @@
-mod user;
-mod serde;
+pub mod user;
+pub mod serde;
 mod primitives;

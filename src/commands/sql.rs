@@ -1,4 +1,6 @@
 use crate::commands::{CommandError, Execute, ExecutionError, TryFromStr};
+use crate::data::user::User;
+use crate::database::Database;
 
 #[derive(Debug, PartialEq)]
 pub enum SqlCommand {
@@ -61,17 +63,24 @@ impl TryFromStr for SqlCommand {
 }
 
 impl Execute for SqlCommand {
-    fn execute(&self) -> Result<(), ExecutionError> {
+    fn execute(self, database: &mut Database) -> Result<(), ExecutionError> {
         match self {
-            SqlCommand::Insert { .. } => {
-                println!("Execute insert command");
-                Ok(())
+            SqlCommand::Insert {
+                id,
+                username,
+                email
+            } => {
+                let user = User::new(id, username.clone(), email.clone());
+                database.insert(user).map_err(ExecutionError::Insertion)?;
+                println!("User successfully inserted");
             }
             SqlCommand::Select => {
-                println!("Execute select command");
-                Ok(())
+                for user in database.select::<User>().map_err(ExecutionError::Select)? {
+                    println!("{:?}", user);
+                }
             }
         }
+        Ok(())
     }
 }
 
