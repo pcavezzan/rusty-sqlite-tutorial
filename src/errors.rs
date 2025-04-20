@@ -69,3 +69,29 @@ impl Display for SerializationError {
 }
 
 impl Error for SerializationError {}
+
+#[derive(Debug, PartialEq)]
+pub enum InsertionError {
+    Serialization(SerializationError),
+}
+
+impl Display for InsertionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl Error for InsertionError {}
+
+#[derive(Debug, PartialEq)]
+pub enum SelectError {
+    Deserialization(DeserializationError),
+}
+
+impl Display for SelectError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl Error for SelectError {}

@@ -5,6 +5,7 @@ use crate::commands::{parse, Execute};
 mod commands;
 mod data;
 mod errors;
+mod database;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     loop {
