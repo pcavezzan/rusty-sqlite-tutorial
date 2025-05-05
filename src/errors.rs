@@ -1,11 +1,13 @@
 use std::error::Error;
 use std::fmt::Display;
 use std::string::FromUtf8Error;
+use crate::data::TableName;
 
 #[derive(Debug, PartialEq)]
 pub enum ExecutionError {
     Insertion(InsertionError),
     Select(SelectError),
+    Create(CreationError),
 }
 
 impl Display for ExecutionError {
@@ -21,6 +23,8 @@ pub enum CommandError {
     NotEnoughArguments,
     TooManyArguments,
     ExpectingInteger,
+    /// La table n'existe pas
+    UnknownTable(String)
 }
 
 impl Display for CommandError {
@@ -76,6 +80,7 @@ impl Error for SerializationError {}
 #[derive(Debug, PartialEq)]
 pub enum InsertionError {
     Serialization(SerializationError),
+    TableNotExist(TableName),
 }
 
 impl Display for InsertionError {
@@ -89,6 +94,7 @@ impl Error for InsertionError {}
 #[derive(Debug, PartialEq)]
 pub enum SelectError {
     Deserialization(DeserializationError),
+    TableNotExist(TableName),
 }
 
 impl Display for SelectError {
@@ -98,3 +104,20 @@ impl Display for SelectError {
 }
 
 impl Error for SelectError {}
+
+//-----------------------
+// Creation table error
+//-----------------------
+#[derive(Debug, PartialEq)]
+pub enum CreationError {
+    TableAlreadyExist(TableName),
+}
+
+impl Display for CreationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl Error for CreationError {}
+

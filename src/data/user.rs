@@ -3,9 +3,9 @@ use crate::errors::{DeserializationError, SerializationError};
 
 #[derive(Debug, PartialEq)]
 pub struct User {
-    id: i64,
-    username: String,
-    email: String,
+    pub(crate) id: i64,
+    pub(crate) username: String,
+    pub(crate) email: String,
 }
 
 impl User {

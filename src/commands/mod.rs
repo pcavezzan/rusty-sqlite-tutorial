@@ -6,7 +6,6 @@ use crate::errors::{CommandError, ExecutionError};
 mod sql;
 mod meta;
 
-
 #[derive(Debug, PartialEq)]
 pub enum Command<'a> {
     Sql(SqlCommand),
@@ -57,25 +56,38 @@ pub fn parse(input: &str) -> Result<Command, CommandError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
+    use crate::data::{Record, TableName, User};
     #[test]
     fn test_parse() {
         assert_eq!(parse(".exit"), Ok(Command::Meta(MetaCommand::Exit)));
         assert_eq!(
-            parse("insert 1 name email@domain.tld"),
+            parse("insert user 1 name email@domain.tld"),
             Ok(Command::Sql(SqlCommand::Insert {
-                id: 1,
-                username: "name".to_string(),
-                email: "email@domain.tld".to_string()
+                data: Record::User(User {
+                    id: 1,
+                    username: "name".to_string(),
+                    email: "email@domain.tld".to_string()
+                })
             }))
         );
-        assert_eq!(parse("select"), Ok(Command::Sql(SqlCommand::Select)));
+        assert_eq!(
+            parse("select car"),
+            Ok(Command::Sql(SqlCommand::Select {
+                table: TableName::Car
+            }))
+        );
+        assert_eq!(
+            parse("create car"),
+            Ok(Command::Sql(SqlCommand::Create {
+                table: TableName::Car
+            }))
+        );
         assert_eq!(
             parse("unknown command"),
             Ok(Command::Unknown {
                 command: "unknown command"
             })
         );
-
     }
 }
+
